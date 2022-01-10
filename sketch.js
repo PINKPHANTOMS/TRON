@@ -23,8 +23,8 @@ function draw(){
   frameRate(45);
    if(!pause && !end){
      c.update();
-     c.hit();
      d.update();
+     c.hit();
      d.hit();
   }
   c.show();
