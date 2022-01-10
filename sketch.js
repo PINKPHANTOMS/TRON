@@ -1,75 +1,70 @@
-let video, poseNet, pose, skeleton;
-let x, y = 100, z = 100, size, rThresh;
-let cZ = 0, cX = 0, cY = 0;
-let obj;
 
-function preload() {
-  obj = loadModel('cage.obj', true);
+let s;
+var scl = 3;
+var pause = true;
+var end = false;
+var player;
+var win = '';
+
+
+function setup(){
+  createCanvas(1000, 600);
+  c = new Cycle(1, 0, 0);
+  d = new Cycle(2, width-scl, height-scl);
 }
 
-function setup() {
-  createCanvas(windowWidth, windowHeight, WEBGL);
-  camera = createCamera();
-  camera.lookAt(0, 0, 0);
-  camera.setPosition(cX, cY, cZ);
-
-  video = createCapture(VIDEO)
-  video.hide();
-  poseNet = ml5.poseNet(video);
-  poseNet.on('pose', gotPoses);
-  push();
+function draw(){
+  background(10, 10, 10);
+  frameRate(30);
+   if(!pause && !end){
+     c.update();
+     c.hit();
+     d.update();
+     d.hit();
+  }
+  c.show();
+  d.show();
+  if(win == 1) d.endGraphic();
+  else if(win == 2) c.endGraphic();
 }
 
-function gotPoses(poses){
-  if(poses.length>0){
-    pose = poses[0].pose;
-    skeleton = poses[0].skeleton;
+function restartGame(){
+  clear();
+  win = 0;
+  c = new Cycle(1, 0, 0);
+  d = new Cycle(2, width - scl, height - scl);
+  pause = false;
+  end = false;
+}
+
+function keyPressed(){
+  if(!end){
+  if(keyCode === 87 && d.yspeed == 0){
+    d.dir(0, -1);
+  }else if(keyCode === 83 && d.yspeed == 0){
+    d.dir(0, 1);
+  }else if(keyCode === 65 && d.xspeed == 0){
+    d.dir(-1, 0);
+  }else if(keyCode === 68 && d.xspeed == 0){
+    d.dir(1, 0);
+  }
+  if(keyCode === UP_ARROW && c.yspeed == 0){
+    c.dir(0, -1);
+  }else if(keyCode === DOWN_ARROW && c.yspeed == 0){
+    c.dir(0, 1);
+  }else if(keyCode === LEFT_ARROW && c.xspeed == 0){
+    c.dir(-1, 0);
+  }else if(keyCode === RIGHT_ARROW && c.xspeed == 0){
+    c.dir(1, 0);
   }
 }
-
-function draw() {
-  pop();
-  translate(video.width,0);
-  scale(-1,1);
-  background(100, 0, 0, 0);
-  camera.setPosition(0, cY, cZ);
-
-  strokeWeight(1);
-  stroke(0);
-  fill('rgba(100, 100, 100,.5)');
-
-  if(pose){
-
-    size = abs(pose.leftWrist.x-pose.rightWrist.x);
-    rThresh = abs(pose.leftWrist.y-pose.rightWrist.y);
-
-    if(size > 400){
-      cZ -= 10;
-    }
-    if(size < 175){
-      cZ += 10;
-    }
-
-    if(rThresh < 100){//is there a gradient
-      if(pose.rightWrist.y < 200){
-        cY += 10;
-      }else if(pose.rightWrist.y > 400){
-        cY -= 10;
-      }
-    }else{
-      if(pose.rightWrist.y < 200){
-        if(pose.leftWrist.y > 400){
-          rotateY(millis() / 1000);
-        }
-        // rotateZ(-millis() / 1000);
-      }else if(pose.rightWrist.y > 400){
-        if(pose.leftWrist.y < 200){
-          rotateY(-millis() / 1000);
-        }
-        rotateZ(millis() / 1000);
-      }
+  if(keyCode === ESCAPE){
+    restartGame();
+  }else if(keyCode === 32){
+    if(end){
+      restartGame();
+    }else {
+      pause = !pause;
     }
   }
-  model(obj);
-  push();
 }
