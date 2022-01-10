@@ -94,7 +94,7 @@ function Cycle(player, x0, y0){
 
     this.x = constrain(this.x, -scl, width + scl);
     this.y = constrain(this.y, -scl, height + scl);
-    if(this.total < 50)this.total++;
+    if(this.total < 100)this.total++;
   }
 
   this.show = function(){
