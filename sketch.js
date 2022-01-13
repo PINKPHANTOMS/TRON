@@ -12,7 +12,7 @@ var start = false;
 // }
 
 function setup(){
-  var cnv = createCanvas(800, 500);
+  var cnv = createCanvas(600, 400);
   cnv.center();
   c = new Cycle(1, 0, 0);
   d = new Cycle(2, width-scl, height-scl);
@@ -50,7 +50,7 @@ function restartGame(){
 }
 
 function keyPressed(){
-  if(!end){
+  if(!end && !pause){
   if(keyCode === 87 && d.yspeed == 0){
     d.dir(0, -1);
   }else if(keyCode === 83 && d.yspeed == 0){
