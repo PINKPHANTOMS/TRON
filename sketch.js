@@ -26,7 +26,7 @@ function draw(){
      d.update();
      c.hit();
      d.hit();
-  }else if(!end){
+  }else if(!end && pause && start){
     let s = 'PAUSED';
     fill(200);
     textAlign(CENTER);
