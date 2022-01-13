@@ -26,7 +26,14 @@ function draw(){
      d.update();
      c.hit();
      d.hit();
+  }else if(!end){
+    let s = 'PAUSED';
+    fill(200);
+    textAlign(CENTER);
+    textSize(25);
+    text(s, width/2, height/2, 50);
   }
+
   c.show();
   d.show();
   if(win == 1) d.endGraphic();
